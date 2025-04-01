@@ -70,8 +70,8 @@ public class SecurityConfiguration {
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/home/user").fullyAuthenticated()
-                        .anyRequest().permitAll()
+//                        .requestMatchers("/home/user").fullyAuthenticated()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
                 return http.build();

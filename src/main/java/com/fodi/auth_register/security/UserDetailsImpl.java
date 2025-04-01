@@ -48,6 +48,8 @@ public class UserDetailsImpl implements UserDetails {
         return username;
     }
 
+    public String getPhoneNumber() { return phoneNumber; }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

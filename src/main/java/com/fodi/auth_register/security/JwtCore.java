@@ -1,6 +1,7 @@
 package com.fodi.auth_register.security;
 
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -8,7 +9,7 @@ import io.jsonwebtoken.*;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-
+@Slf4j
 @Component
 public class JwtCore {
     @Value("${app.secret}")
@@ -30,6 +31,11 @@ public class JwtCore {
     }
 
     public String getNameFromJwt(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
+        SecretKey key = Keys.hmacShaKeyFor(secret.getBytes());
+
+        Claims claims =  Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        log.info(claims.toString());
+        log.info(claims.getSubject());
+        return claims.getSubject();
     }
 }

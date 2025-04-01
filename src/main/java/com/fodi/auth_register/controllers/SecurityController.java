@@ -5,6 +5,7 @@ import com.fodi.auth_register.dto.SignupRequest;
 import com.fodi.auth_register.models.Client;
 import com.fodi.auth_register.repository.ClientRepository;
 import com.fodi.auth_register.security.JwtCore;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +20,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.Console;
+
 @RestController
 @RequestMapping("/auth")
+@NoArgsConstructor
 public class SecurityController {
     private ClientRepository clientRepository;
     private PasswordEncoder passwordEncoder;
     private AuthenticationManager authenticationManager;
     private JwtCore jwtCore;
+    Console console = System.console();
 
     @Autowired
     public SecurityController(ClientRepository clientRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtCore jwtCore) {
@@ -35,7 +40,7 @@ public class SecurityController {
         this.jwtCore = jwtCore;
     }
 
-    @PostMapping("/sign-up")
+    @PostMapping("/signup")
     ResponseEntity<?> signup(@RequestBody SignupRequest signupRequest) {
         if (clientRepository.existsByPhoneNumber(signupRequest.getPhoneNumber())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Этот номер телефона уже используется");
@@ -51,7 +56,7 @@ public class SecurityController {
         clientRepository.save(client);
         return ResponseEntity.ok("Successfully signed up");
     }
-    @PostMapping("/sign-in")
+    @PostMapping("/signin")
     public ResponseEntity<?>signin(@RequestBody SigninRequest signinRequest){
         Authentication authentication = null;
         try{
@@ -61,6 +66,7 @@ public class SecurityController {
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtCore.generateToken(authentication);
+        System.out.println(jwt);
         return ResponseEntity.ok(jwt);
     }
 }

@@ -1,5 +1,6 @@
 package com.fodi.auth_register.security;
 
+import com.fodi.auth_register.exception.PhoneNumberNotFoundExeption;
 import com.fodi.auth_register.models.Client;
 import com.fodi.auth_register.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,14 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Client client = clientRepository.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException(
                 String.format("Username %s not found", username)
+        ));
+        return UserDetailsImpl.build(client);
+    }
+
+
+    public UserDetails loadUserByPhoneNumber(String phoneNumber) throws PhoneNumberNotFoundExeption {
+        Client client = clientRepository.findUserByPhoneNumber(phoneNumber).orElseThrow(() -> new PhoneNumberNotFoundExeption(
+                String.format("Phone number %s not found", phoneNumber)
         ));
         return UserDetailsImpl.build(client);
     }
