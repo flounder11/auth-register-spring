@@ -22,7 +22,7 @@ public class JwtCore {
         SecretKey key = Keys.hmacShaKeyFor(secret.getBytes());
 
         return Jwts.builder()
-                .setSubject(user.getUsername())
+                .setSubject(user.getPhoneNumber())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + lifetime))
                 .signWith(key)

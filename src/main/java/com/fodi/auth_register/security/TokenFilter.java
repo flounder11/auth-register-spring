@@ -20,12 +20,12 @@ import java.io.IOException;
 public class TokenFilter extends OncePerRequestFilter {
     private final UserService userService;
     private JwtCore jwtCore;
-    private UserDetailsService userDetailsService;
+//    private UserDetailsService userDetailsService;
 
     @Autowired
-    public TokenFilter(JwtCore jwtCore, UserDetailsService userDetailsService, UserService userService) {
+    public TokenFilter(JwtCore jwtCore, UserService userService) {
         this.jwtCore = jwtCore;
-        this.userDetailsService = userDetailsService;
+//        this.userDetailsService = userDetailsService;
         this.userService = userService;
     }
 
@@ -33,7 +33,7 @@ public class TokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = null;
-        String username = null;
+        String phoneNumber = null;
         UserDetails userDetails = null;
         UsernamePasswordAuthenticationToken authenticationToken = null;
         try {
@@ -43,14 +43,14 @@ public class TokenFilter extends OncePerRequestFilter {
             }
             if (jwt != null) {
                 try {
-                    username = jwtCore.getNameFromJwt(jwt);
-                    log.info(username);
+                    phoneNumber = jwtCore.getNameFromJwt(jwt);
+                    log.info(phoneNumber);
                 } catch (ExpiredJwtException e) {
                     e.printStackTrace();
                 }
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                if (phoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 //                    userDetails = userDetailsService.loadUserByUsername(username);
-                    userDetails = userDetailsService.loadUserByUsername(username);
+                    userDetails = userService.loadUserByUsername(phoneNumber);
                     authenticationToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,

@@ -8,6 +8,7 @@ import com.fodi.auth_register.security.JwtCore;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Console;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -54,19 +56,21 @@ public class SecurityController {
         client.setPassword(hashedPassword);
         client.setPhoneNumber(signupRequest.getPhoneNumber());
         clientRepository.save(client);
-        return ResponseEntity.ok("Successfully signed up");
+        return ResponseEntity.status(HttpStatus.CREATED).body(client);
     }
     @PostMapping("/signin")
     public ResponseEntity<?>signin(@RequestBody SigninRequest signinRequest){
         Authentication authentication = null;
+        Optional<Client> client = clientRepository.findUserByPhoneNumber(signinRequest.getPhoneNumber());
         try{
-            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinRequest.getUsername(), signinRequest.getPassword()));
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinRequest.getPhoneNumber(), signinRequest.getPassword()));
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>("Введите корректный логин или пароль", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Введите корректный номер или пароль", HttpStatus.UNAUTHORIZED);
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtCore.generateToken(authentication);
-        System.out.println(jwt);
-        return ResponseEntity.ok(jwt);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(jwt);
     }
 }

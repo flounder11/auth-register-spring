@@ -24,6 +24,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 @Configuration
 @EnableWebSecurity
@@ -35,6 +36,14 @@ public class SecurityConfiguration {
     public SecurityConfiguration(UserService userService, @Lazy TokenFilter tokenFilter) {
         this.userService = userService;
         this.tokenFilter = tokenFilter;
+    }
+
+    public void addCorsMappings(CorsRegistry registry) {
+        registry
+                .addMapping("/**")
+                .allowedOrigins("http://localhost:5173")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+
     }
 
     @Bean
@@ -70,8 +79,8 @@ public class SecurityConfiguration {
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
-//                        .requestMatchers("/home/user").fullyAuthenticated()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/home").fullyAuthenticated()
+//                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
                 return http.build();
