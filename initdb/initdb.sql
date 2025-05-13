@@ -1,4 +1,4 @@
-ZloyBank_email
-ZloyBank_chat
-ZloyBank_card
-ZloyBank_auth
+CREATE DATABASE ZloyBank_email;
+CREATE DATABASE ZloyBank_chat;
+CREATE DATABASE ZloyBank_card;
+CREATE DATABASE ZloyBank_auth;
