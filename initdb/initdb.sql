@@ -1,7 +1,4 @@
-CREATE USER auth_user WITH PASSWORD 'auth_pass';
-GRANT ALL PRIVILEGES ON DATABASE ZloyBank_auth TO auth_user;
-
-CREATE DATABASE ZloyBank_email;
-CREATE DATABASE ZloyBank_chat;
-CREATE DATABASE ZloyBank_card;
-CREATE DATABASE ZloyBank_auth;
+CREATE DATABASE zloybank_email;
+CREATE DATABASE zloybank_chat;
+CREATE DATABASE zloybank_card;
+CREATE DATABASE zloybank_auth;
