@@ -2,8 +2,6 @@ package com.fodi.auth_register.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -13,7 +11,7 @@ import lombok.Data;
 public class Client {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private Long id;
+    private Long clientId;
 //    @NotEmpty(message = "Имя не может быть пустым")
     private String username;
     @Column(name = "email_client")

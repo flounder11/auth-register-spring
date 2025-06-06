@@ -18,6 +18,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -64,8 +66,13 @@ public class SecurityController {
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtCore.generateToken(authentication);
+        Long clientId = client.get().getClientId();
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", jwt);
+        response.put("clientId", clientId);
+        response.put("username", client.get().getUsername());
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(jwt);
+                .body(response);
     }
 }
